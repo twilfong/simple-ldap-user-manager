@@ -1,0 +1,29 @@
+#!/usr/bin/expect
+#
+# Quick and dirty wrapper for ldappasswd. Takes ldap url and userdn as arguments and expects two lines from stdin
+# with the first line being the new password and the second being the current password
+#
+
+set timeout 20
+set url [lindex $argv 0]
+set userdn [lindex $argv 1]
+
+spawn -noecho ldappasswd -S -H "$url" -xD "$userdn" -W "$userdn"
+log_user 0
+expect "ssword:"
+if {[gets stdin line] != -1} { send "$line\r" }
+expect "ssword:"
+send "$line\r"
+expect {
+  "ssword:" {
+     if {[gets stdin line] != -1} { send "$line\r" }
+  } default { 
+    send_user $expect_out(buffer)
+    exit 1
+  }
+}
+log_user 1
+expect eof
+# exit with the result code from the spawn
+catch wait result }
+exit [lindex $result 3]
