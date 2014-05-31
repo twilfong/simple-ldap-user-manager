@@ -41,13 +41,15 @@ foreach ($LDAP_ATTRS as $key => $val) {
   $attrs[$key] = isset($user_entry[$key]) ? $user_entry[$key][0] : '';
 }
 
-// Check if this is a modify action
-// If so, run the modify routine
-// Otherwise, load user data from LDAP
+// If this is a modify action, modify LDAP user and set attrs to new attributes
 $error = false;
 if (isset($_POST['modify'])) {
-  $error = ! modifyUser($ldapconn,$userdn,$attrs,$_POST['attrs'],$_POST['newPass'],$_POST['passConf'],$pass);
-  $attrs = $_POST['attrs'];
+    $newAttrs = isset($_POST['attrs']) ? $_POST['attrs'] : '';
+    $newPass = isset($_POST['newPass']) ? sanitize($_POST['newPass']) : '';
+    $passConf = isset($_POST['passConf']) ? sanitize($_POST['passConf']) : '';
+    $error = ! modifyUser($ldapconn, $userdn, $attrs,
+                          $newAttrs, $newPass, $passConf, $pass);
+    $attrs = $newAttrs;
 }
 
 // Start HTML Output
