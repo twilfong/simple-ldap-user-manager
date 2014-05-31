@@ -5,10 +5,6 @@
 require_once('config.inc');
 require_once('functions.inc');
 
-$messages = array();
-$msg_details = array();
-$error = false;
-
 require_ssl();
 
 //Load username and password vars
@@ -48,6 +44,7 @@ foreach ($LDAP_ATTRS as $key => $val) {
 // Check if this is a modify action
 // If so, run the modify routine
 // Otherwise, load user data from LDAP
+$error = false;
 if (isset($_POST['modify'])) {
   $error = ! modifyUser($ldapconn,$userdn,$attrs,$_POST['attrs'],$_POST['newPass'],$_POST['passConf'],$pass);
   $attrs = $_POST['attrs'];
@@ -57,21 +54,10 @@ if (isset($_POST['modify'])) {
 
 // Include HTML header file
 include_once('header.inc');
-?>
 
-<!--BEGIN MESSAGE-->
-<?php
-// Display a message if there is one
-if ($messages) {
-  echo "<p><table cellspacing=0 cellpadding=10 border=1 align=center>
-        <tr><td bgcolor=${MSG_BG_COLORS[$error]}>";
-  foreach ($messages as $msg) print "<font size=+2><center><b>$msg</b></center></font>";
-  echo "<p></p>\n";
-  foreach ($msg_details as $det) print "<font size=+1>$det</font><br>";
-  echo "</td></tr></table><p><hr><p>\n";
-}
+// Display user messages if any
+displayMessages($error)
 ?>
-<!--END MESSAGE-->
 
 <!--BEGIN FORM-->
 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" name="modUser" method="post">
