@@ -5,25 +5,30 @@
 require_once('config.inc');
 require_once('functions.inc');
 
+// We are asking for passwords, so ensure the user is connecting with SSL
 require_ssl();
 
-//Load username and password vars
-$uid = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-$pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
-
-// Require Login
-// Use HTTP auth so that username and password are kept by browser and no session is needed
-if (strlen("$uid $pass") < 4) force_http_auth();
+// Require authenticated login
+// With HTTP auth LDAP credentials are kept by browser and no session is needed
+if(!isset($_SERVER['PHP_AUTH_USER'])) {
+    force_http_auth();
+} else {
+    $uid = $_SERVER['PHP_AUTH_USER'];
+    $pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+}
 
 // Open LDAP connection, using login credentials to bind.
+// Force v3 connection to be compatible with most LDAP servers
 $ldapconn = ldap_connect($LDAPURL);
-ldap_set_option($ldapconn,LDAP_OPT_PROTOCOL_VERSION, 3);	# Most LDAP servers only acceppt v3 connections
-$userdn = "uid=$uid,$UIDBASE";
+ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+$userdn = "uid=$uid, $UIDBASE";
+
+// Perform authenticated bind to LDAP server, checking for auth errors
 if (!@ldap_bind($ldapconn, $userdn, $pass)) {
   $ldaperror = ldap_error($ldapconn);
-  // If the error string is about credentials then force reauthentication, otherwise display the error
-  if (strstr($ldaperror,"credentials"))
-    force_http_auth("Invalid username and passsword. Try again.");
+  // If the error is about creds, force reauth, otherwise display the error
+  if (strstr($ldaperror, "credentials"))
+      force_http_auth("Invalid username and passsword. Try again.");
   else die("LDAP bind error connecting to '$LDAPURL' as '$userdn': " . $ldaperror);
 }
 
