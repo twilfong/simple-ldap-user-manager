@@ -1,6 +1,14 @@
 <?php
-# Author: Tim Wilfong <tim@wilfong.me>
-
+/**
+* Simple LDAP User Manager
+*
+* Simple Web GUI for user management. Currently only implements end-user
+* self-service of LDAP accounts, allowing users to change their password and
+* edit attributes such as phone number, etc.
+*
+* @author Tim Wilfong <tim@wilfong.me>
+*/
+ 
 // Include configuration and functions
 require_once('config.inc');
 require_once('functions.inc');
@@ -25,15 +33,18 @@ $userdn = "uid=$uid, $UIDBASE";
 
 // Perform authenticated bind to LDAP server, checking for auth errors
 if (!@ldap_bind($ldapconn, $userdn, $pass)) {
-  $ldaperror = ldap_error($ldapconn);
-  // If the error is about creds, force reauth, otherwise display the error
-  if (strstr($ldaperror, "credentials"))
-      force_http_auth("Invalid username and passsword. Try again.");
-  else die("LDAP bind error connecting to '$LDAPURL' as '$userdn': " . $ldaperror);
+    $ldaperror = ldap_error($ldapconn);
+    // If the error is about creds, force reauth, otherwise display the error
+    if (strstr($ldaperror, "credentials")) {
+        force_http_auth("Invalid username and passsword. Try again.");
+    } else {
+        die("Error binding to '$LDAPURL' as '$userdn': " . $ldaperror);
+    }
 }
 
 // Get the LDAP entry for the authenticated user
-$result = ldap_get_entries($ldapconn, ldap_read($ldapconn, $userdn, '(objectclass=*)'));
+$result = ldap_get_entries($ldapconn,
+                           ldap_read($ldapconn, $userdn, '(objectclass=*)'));
 $user_entry = $result[0];
 
 //Load cmd value (which might be a GET or POST)
@@ -66,6 +77,7 @@ include_once('header.inc');
 displayMessages($error)
 ?>
 
+
 <!--BEGIN FORM-->
 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" name="modUser" method="post">
 <table>
@@ -90,6 +102,7 @@ displayMessages($error)
 </table>
 </form>
 <!--END FORM-->
+
 
 <?php
 // Include HTML footer file
