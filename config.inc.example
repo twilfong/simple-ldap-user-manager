@@ -20,3 +20,6 @@ $MSG_BG_COLORS = array(
     '#99d0ff',	# Bg color for information/success
     '#ffd0d0'	# Bg color for error/warning
 );
+
+// Do we want to enforce SSL traffic only?
+$requireSSL = TRUE;

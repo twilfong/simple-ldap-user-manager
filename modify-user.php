@@ -13,8 +13,12 @@
 require_once('config.inc');
 require_once('functions.inc');
 
+
 // We are asking for passwords, so ensure the user is connecting with SSL
-require_ssl();
+if($requireSSL === TRUE){
+	require_ssl();
+}
+
 
 // Require authenticated login
 // With HTTP auth LDAP credentials are kept by browser and no session is needed
