@@ -2,6 +2,7 @@
 
 $LDAPDN = "dc=example,dc=com";
 $LDAPURL = "ldapi:///";
+$LDAPPort = "389";
 // $LDAPURL = "ldaps://some.remote.server/";
 $UIDBASE = "ou=People,$LDAPDN";
 
