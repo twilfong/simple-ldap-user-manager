@@ -3,10 +3,7 @@
 class ldapConnection {
 
 
-
-	// Fetch bind user credentials
-	private $LDAPURL;
-
+	// This will be the connection resource
 	private $connection;
 
 
@@ -14,7 +11,9 @@ class ldapConnection {
 	include_once('config.inc');
 
 
+	//
 	// Form connection to LDAP server
+	//
 	function __construct() {
 
 		// load configuration file
@@ -37,7 +36,7 @@ class ldapConnection {
 
 
 		// load attributes for new user from template file
-		$attributes = include("userTempaltes/$template");
+		include("templates/$template".".inc");
 
 		// It is assumed that the GID is in the template file for now
 
@@ -61,6 +60,9 @@ class ldapConnection {
 	}
 
 
+	//
+	// Hash a password for LDAP use
+	//
 	public function makeHash($password) {
 
 		$salt = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',4)),0,4);
