@@ -7,10 +7,6 @@ class ldapConnection {
 	private $connection;
 
 
-	// load configuration file
-	include_once('config.inc');
-
-
 	//
 	// Form connection to LDAP server
 	//
