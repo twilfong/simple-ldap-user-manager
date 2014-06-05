@@ -1,7 +1,10 @@
 <?php
 
-$attributes['gid'] = 2017;
-$attributes['shell'] = "/bin/bash";
+$attributes['gidNumber'] = 2017;
+$attributes['loginShell'] = "/bin/bash";
+$attributes['objectClass'][0] = "top";
+$attributes['objectClass'][1] = "inetOrgPerson";
+$attributes['objectClass'][2] = "posixAccount";
 
 
 ?>

@@ -16,8 +16,15 @@ class ldapConnection {
 		include('config.inc');
 
 		// connect to LDAP server
+		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); 
+		//ldap_set_option(NULL, LDAP_OPT_NETWORK_TIMEOUT,2);
 		$this->connection = ldap_connect($LDAPURL,$LDAPPort);
 		ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+		// bind to LDAP
+		ldap_bind($this->connection,$BINDDN,$BINDPASS);
+
+		$error = ldap_error($this->connection);
+		//ldap_start_tls($this->connection);
 
 		// TODO: Handle errors from new connection
 
@@ -30,14 +37,22 @@ class ldapConnection {
 	//
 	public function createUser($uid, $template, $password) {
 
+		// load configuration variables
+		include('config.inc');
 
 		// load attributes for new user from template file
 		include("templates/$template".".inc");
 
 		// It is assumed that the GID is in the template file for now
+		// add uid number to user attributes
+		$attributes['uidNumber'] = 111111;
 
-		// use UID as CN
+		// use UID as CN and SN and UID
 		$attributes['cn'] = $uid;
+		$attributes['sn'] = $uid;
+
+		// Formulate full path to new user
+		$dn = "uid=$uid,$UIDBASE";
 
 		// formulate home directory
 		$attributes['homeDirectory'] = '/home/' . $uid;
@@ -47,11 +62,24 @@ class ldapConnection {
 		if(!empty($password)){
 			$password = $this->makeHash($password);
 			$attributes['userPassword'] = $password;
+		} else {
+			$attributes['userPassword'] = "";
 		}
 
-
+echo "DN: $dn".PHP_EOL;
+echo "Attributes: ";
+print_r($attributes);
+echo PHP_EOL;
+echo "UID: $uid".PHP_EOL;
 		// Create the user with supplied attributes
-		ldap_add($this->connection,$uid,$attributes);
+		ldap_add($this->connection,$dn,$attributes);
+
+		$error = ldap_error($this->connection);
+echo PHP_EOL . $error . PHP_EOL;
+
+		// TODO: Check for errors in user addition from ldap
+
+		return TRUE;
 
 	}
 
