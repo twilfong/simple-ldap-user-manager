@@ -18,12 +18,14 @@ if(isset($_POST['uid'])){
 
 	// Collect post variables for user creation
 	// TODO: Input validation
-	$uid = $_POST['uid'];
 	$template = $_POST['template'];
 	$password = $_POST['password'];
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
+
+	// Get the next available UID
+	$uid = $connection->getUID();
 
 	// Create new ldap user
 	$connection->createUser($uid, $template, $password);
