@@ -24,3 +24,10 @@ $MSG_BG_COLORS = array(
 
 // Do we want to enforce SSL traffic only?
 $requireSSL = TRUE;
+
+
+$BINDDN = 'cn=ldapuser,dc=your,dc=domain,dc=com';
+$BINDPASS = "bindp@ss!";
+
+$MINUID=5000;
+$MAXUID=6000;

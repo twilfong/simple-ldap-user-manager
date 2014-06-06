@@ -16,7 +16,8 @@ class ldapConnection {
 		include('config.inc');
 
 		// connect to LDAP server
-		ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); 
+		//ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7); 
+
 		//ldap_set_option(NULL, LDAP_OPT_NETWORK_TIMEOUT,2);
 		$this->connection = ldap_connect($LDAPURL,$LDAPPort);
 		ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -83,6 +84,57 @@ echo PHP_EOL . $error . PHP_EOL;
 
 	}
 
+
+	//
+	// Searches the LDAP server for the next available UID
+	//
+	public function getUID() {
+
+		// load ldap config
+		include('config.inc');
+		$attributes = array("uidNumber");
+
+		$search = ldap_search($this->connection, $UIDBASE, '(|(uid=*))', $attributes);
+		$error = ldap_error($this->connection);
+		// TODO: Handle errors
+
+		$results = ldap_get_entries($this->connection, $search);
+		$error = ldap_error($this->connection);
+		// TODO: Handle errors
+
+		// uncomment to see raw returned search array structure
+		print_r($info);
+
+		$selectedUID = $MINUID;
+
+		// loop through and find the highest UID returned
+		foreach($results as $result){
+			$uidNumber = $result['uidnumber'][0];
+			if(!empty($uidNumber)){
+				if(is_numeric($uidNumber)){
+					if($uidNumber > $selectedUID){
+						$selectedUID = $uidNumber;
+					}
+				}
+			}
+			// prevent re-use of uid number cross users
+			unset($uidNumber);
+		}
+
+
+		// up the UID to next free one
+		$selectedUID++;
+
+		// TODO: Add cap to maximum UID returned
+		if($selectedUID > $MAXUID){
+			error_log('ERROR: Maximum UID breached!');
+			echo "MAXIMUM UID IS BEYOND MAXIMUM SPECIFIED RANGE";
+			exit;
+		}
+
+		return $selectedUID;
+			
+	}
 
 	//
 	// Hash a password for LDAP use
