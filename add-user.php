@@ -25,7 +25,11 @@ if(isset($_POST['uid'])){
 	$connection = new ldapConnection();
 
 	// Get the next available UID
-	$uid = $connection->getUID();
+	if(empty($_POST['uid'])){
+		$uid = $connection->getUID();
+	} else {
+		$uid = $_POST['uid'];
+	}
 
 	// Create new ldap user
 	$connection->createUser($uid, $template, $password);

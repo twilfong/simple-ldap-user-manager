@@ -67,16 +67,15 @@ class ldapConnection {
 			$attributes['userPassword'] = "";
 		}
 
-echo "DN: $dn".PHP_EOL;
-echo "Attributes: ";
-print_r($attributes);
-echo PHP_EOL;
-echo "UID: $uid".PHP_EOL;
+		// Uncomment for DEBUG
+		//echo "DN: $dn".PHP_EOL;
+		//echo "Attributes: ";
+		//print_r($attributes);
+
 		// Create the user with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
 
 		$error = ldap_error($this->connection);
-echo PHP_EOL . $error . PHP_EOL;
 
 		// TODO: Check for errors in user addition from ldap
 
@@ -128,7 +127,7 @@ echo PHP_EOL . $error . PHP_EOL;
 		// TODO: Add cap to maximum UID returned
 		if($selectedUID > $MAXUID){
 			error_log('ERROR: Maximum UID breached!');
-			echo "MAXIMUM UID IS BEYOND MAXIMUM SPECIFIED RANGE";
+			echo "NEW UID IS BEYOND MAXIMUM SPECIFIED RANGE";
 			exit;
 		}
 
