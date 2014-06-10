@@ -251,6 +251,40 @@ class ldapConnection {
 		return '{SSHA}' . base64_encode(sha1( $password.$salt, TRUE ). $salt);
 	}
 
+	//
+	// Remove uid from group
+	//
+	public function removeFromGroup($uid,$cn){
+
+		include('config.inc');
+
+		// setup our path to the group we are modifying
+		$dn = "cn=$cn,$GIDBASE";
+
+		// fetch the member we are removing as an array
+		$member = array($uid);
+
+		// modify group 
+		$result = ldap_mod_del($this->connection, $dn, $member);
+	}
+
+	//
+	// Add a uid to a group
+	//
+	public function addToGroup($uid,$cn){
+
+		include('config.inc');
+
+		// setup our path to the group we are modifying
+		$dn = "cn=$cn,$GIDBASE";
+
+		// fetch user as array
+		$newMember = array($uid);
+
+		// modify group 
+		$result = ldap_mod_add($this->connection, $dn, $newMember);
+	}
+
 }
 
 
