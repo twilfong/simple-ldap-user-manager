@@ -38,16 +38,15 @@ if(isset($_REQUEST['template'])){
 	} else {
 		$attributes = "";
 	}
-echo "attributes: $attributes";
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
 
 	// Create new ldap user
-	$connection->createUser($uid, $template, $password, $attributes);
+	$uidNumber = $connection->createUser($uid, $template, $password, $attributes);
 
-	// TODO: Move to account created html include
-	echo PHP_EOL."Account $uid created with template $template.";
+	// echo UID number on success
+	echo $uidNumber;
 
 
 } else { 

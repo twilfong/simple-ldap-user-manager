@@ -26,8 +26,11 @@ class ldapConnection {
 
 		$error = ldap_error($this->connection);
 		//ldap_start_tls($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 
-		// TODO: Handle errors from new connection
 
 	}
 
@@ -41,7 +44,8 @@ class ldapConnection {
 
 		// validate UID string
 		if(empty($cn)){
-			echo "ERROR: Must supply cn string";
+			echo "[ERROR]: Must supply cn string";
+			exit;
 		} else {
 			$attributes['cn'] = $cn;
 		}
@@ -69,17 +73,16 @@ class ldapConnection {
 		$attributes['objectclass'][1] = "top";
 		$attributes['cn'][0] = "ldapusers";
 		$attributes['memberUid'][0] = "";
-//print_r($attributes);
 
 		$dn = "cn=$cn,$GIDBASE";
 
 		// Create the group with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
 		$error = ldap_error($this->connection);
-
-//echo $error;
-
-		// TODO: Check for errors in user addition from ldap
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 
 		return $attributes['gidNumber'];
 
@@ -135,6 +138,10 @@ class ldapConnection {
 		// Create the user with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
 		$error = ldap_error($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 
 //echo $error;
 
@@ -155,10 +162,17 @@ class ldapConnection {
 
 		$search = ldap_search($this->connection, $GIDBASE, '(|(cn=*))', $attributes);
 		$error = ldap_error($this->connection);
-		// TODO: Handle errors
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 
 		$results = ldap_get_entries($this->connection, $search);
 		$error = ldap_error($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 		// TODO: Handle errors
 
 		$selectedGID = $MINGID;
@@ -184,7 +198,7 @@ class ldapConnection {
 		// TODO: Add cap to maximum GID returned
 		if($selectedGID > $MAXGID){
 			error_log('ERROR: Maximum GID breached!');
-			echo "NEW GID IS BEYOND MAXIMUM SPECIFIED RANGE";
+			echo "[ERROR] Maximum GID exceeded.";
 			exit;
 		}
 
@@ -205,10 +219,18 @@ class ldapConnection {
 
 		$search = ldap_search($this->connection, $UIDBASE, '(|(uid=*))', $attributes);
 		$error = ldap_error($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 		// TODO: Handle errors
 
 		$results = ldap_get_entries($this->connection, $search);
 		$error = ldap_error($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 		// TODO: Handle errors
 
 		$selectedUID = $MINUID;
@@ -234,7 +256,7 @@ class ldapConnection {
 		// TODO: Add cap to maximum UID returned
 		if($selectedUID > $MAXUID){
 			error_log('ERROR: Maximum UID breached!');
-			echo "NEW UID IS BEYOND MAXIMUM SPECIFIED RANGE";
+			echo "[ERROR] Maximum UID exceeded.";
 			exit;
 		}
 
