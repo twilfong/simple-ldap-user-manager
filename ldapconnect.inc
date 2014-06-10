@@ -36,7 +36,7 @@ class ldapConnection {
 	// Create a user from an attribute template
 	// Display Name, Template file, Password
 	//
-	public function createUser($uid, $template, $password, $attributes=array() ) {
+	public function createUser($uid, $template, $password, $userAttributes=array() ) {
 
 		// load configuration variables
 		include('config.inc');
@@ -44,12 +44,25 @@ class ldapConnection {
 		// load attributes for new user from template file
 		include("templates/$template".".inc");
 
+
 		// if a password is supplied, hash it
 		if(!empty($password)){
 			$password = $this->makeHash($password);
 			$attributes['userPassword'] = $password;
 		} else {
 			$attributes['userPassword'] = "";
+		}
+
+
+		// Parse and assign user specified attributes
+		if(!empty($userAttributes)){
+			$userAttributes = explode($userAttributes,',');
+			foreach($userAttributes as $userAttribute){
+				$userAttribute = explode($userAttribute,'=');
+				$key = $userAttribute[0];
+				$value = $userAttribute[1];
+				$attributes[$key] = $value;
+			}
 		}
 
 print_r($attributes);

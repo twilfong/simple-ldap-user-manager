@@ -32,22 +32,27 @@ if(isset($_REQUEST['template'])){
 
 	// Collect post variables for user creation
 	// TODO: Input validation
+	$uid = $_REQUEST['uid'];
 	$template = $_REQUEST['template'];
 	$password = $_REQUEST['password'];
-	$uid = $_REQUEST['uid'];
-
+	if(!empty($_REQUEST['attributes'];
+		$attributes = $_REQUEST['attributes'];
+	} else {
+		$attributes = "";
+	}
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
 
 	// Create new ldap user
-	$connection->createUser($uid, $template, $password);
+	$connection->createUser($uid, $template, $password, $attributes);
 
 	// TODO: Move to account created html include
 	echo "Account $username created with template $template.";
 
-} else { // end if post operation variable is set
 
+} else { 
+	// if no template option is specified, show input form
 	include('input-form.inc');
 
 } // end else post operation is not set
