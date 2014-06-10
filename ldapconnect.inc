@@ -31,12 +31,65 @@ class ldapConnection {
 
 	}
 
+	//
+	// Create a Group
+	//
+	public function createGroup($cn,$userAttributes=array() ) {
+
+		// load configuration variables
+		include('config.inc');
+
+		// validate UID string
+		if(empty($cn)){
+			echo "ERROR: Must supply cn string";
+		} else {
+			$attributes['cn'] = $cn;
+		}
+
+
+		// Parse and assign user specified attributes
+		if(!empty($userAttributes)){
+			$userAttributes = explode(',',$userAttributes);
+			foreach($userAttributes as $userAttribute){
+				$userAttribute = explode('=',$userAttribute);
+				$key = $userAttribute[0];
+				$value = $userAttribute[1];
+				$attributes[$key] = $value;
+			}
+		}
+
+
+		// find available uid if none supplied by user
+		if(empty($attributes['gidNumber'])){
+			$attributes['gidNumber'] = $this->getGID();
+		}
+
+		// apply other attributes required by groups
+		$attributes['objectclass'][0] = "posixGroup";
+		$attributes['objectclass'][1] = "top";
+		$attributes['cn'][0] = "ldapusers";
+		$attributes['memberUid'][0] = "";
+//print_r($attributes);
+
+		$dn = "cn=$cn,$GIDBASE";
+
+		// Create the group with supplied attributes
+		ldap_add($this->connection,$dn,$attributes);
+		$error = ldap_error($this->connection);
+
+//echo $error;
+
+		// TODO: Check for errors in user addition from ldap
+
+		return $attributes['gidNumber'];
+
+	}
 
 	//
 	// Create a user from an attribute template
 	// Display Name, Template file, Password
 	//
-	public function createUser($uid, $template, $password, $userAttributes=array() ) {
+	public function createUser($uid, $template, $password, $userAttributes="" ) {
 
 		// load configuration variables
 		include('config.inc');
@@ -76,20 +129,69 @@ class ldapConnection {
 
 		// load attributes for new user from template file
 		include("templates/$template".".inc");
-echo PHP_EOL."dn: $dn".PHP_EOL;
-print_r($attributes);
+//echo PHP_EOL."dn: $dn".PHP_EOL;
+//print_r($attributes);
 
 		// Create the user with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
 		$error = ldap_error($this->connection);
 
-echo $error;
+//echo $error;
 
 		// TODO: Check for errors in user addition from ldap
 
 		return $uidNumber;
 
 	}
+
+	//
+	// Searches the LDAP server for the next available GID
+	//
+	public function getGID() {
+
+		// load ldap config
+		include('config.inc');
+		$attributes = array("gidNumber");
+
+		$search = ldap_search($this->connection, $GIDBASE, '(|(cn=*))', $attributes);
+		$error = ldap_error($this->connection);
+		// TODO: Handle errors
+
+		$results = ldap_get_entries($this->connection, $search);
+		$error = ldap_error($this->connection);
+		// TODO: Handle errors
+
+		$selectedGID = $MINGID;
+
+		// loop through and find the highest GID returned
+		foreach($results as $result){
+			$gidNumber = $result['gidnumber'][0];
+			if(!empty($gidNumber)){
+				if(is_numeric($gidNumber)){
+					if($gidNumber > $selectedGID){
+						$selectedGID = $gidNumber;
+					}
+				}
+			}
+			// prevent re-use of gid number cross users
+			unset($gidNumber);
+		}
+
+
+		// up the GID to next free one
+		$selectedGID++;
+
+		// TODO: Add cap to maximum GID returned
+		if($selectedGID > $MAXGID){
+			error_log('ERROR: Maximum GID breached!');
+			echo "NEW GID IS BEYOND MAXIMUM SPECIFIED RANGE";
+			exit;
+		}
+
+		return $selectedGID;
+			
+	}
+
 
 
 	//
@@ -108,9 +210,6 @@ echo $error;
 		$results = ldap_get_entries($this->connection, $search);
 		$error = ldap_error($this->connection);
 		// TODO: Handle errors
-
-		// uncomment to see raw returned search array structure
-		print_r($info);
 
 		$selectedUID = $MINUID;
 

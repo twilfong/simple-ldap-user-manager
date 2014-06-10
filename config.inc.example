@@ -26,9 +26,17 @@ $MSG_BG_COLORS = array(
 // Do we want to enforce SSL traffic only?
 $requireSSL = TRUE;
 
-
+// Location of bind user that we will login as
 $BINDDN = 'cn=ldapuser,dc=your,dc=domain,dc=com';
+// Password of bind user
 $BINDPASS = "bindp@ss!";
 
+// Lowest possible uidNumber to be used
 $MINUID=5000;
+// Highest possible uidNumber to be used
 $MAXUID=6000;
+
+// Lowest possible gidNumber to be used
+$MINGID=5000;
+// Highest possible gidNumber to be used
+$MAXGID=6000;

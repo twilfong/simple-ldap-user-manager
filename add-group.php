@@ -18,7 +18,6 @@ cn - group name
 attributes = key=var,key=var,key=var
 
 
-
 */
 
 
@@ -26,33 +25,27 @@ attributes = key=var,key=var,key=var
 
 
 // If we are given POST data, intercept it and act
-if(isset($_REQUEST['template'])){
+if(isset($_REQUEST['cn'])){
 
-	// Collect post variables for user creation
+	// Collect post variables for group creation
 	// TODO: Input validation
-	$uid = $_REQUEST['uid'];
-	$template = $_REQUEST['template'];
-	$password = $_REQUEST['password'];
+	$cn = $_REQUEST['cn'];
 	if(!empty($_REQUEST['attributes'])) {
 		$attributes = $_REQUEST['attributes'];
 	} else {
 		$attributes = "";
 	}
-echo "attributes: $attributes";
-
 	// Start LDAP connection
 	$connection = new ldapConnection();
 
-	// Create new ldap user
-	$connection->createUser($uid, $template, $password, $attributes);
+	// Create new ldap group
+	$gidNumber = $connection->createGroup($cn,$attributes);
 
-	// TODO: Move to account created html include
-	echo PHP_EOL."Account $uid created with template $template.";
+	echo $gidNumber;
 
 
 } else { 
-	// if no template option is specified, show input form
-	include('input-form.inc');
+	include('group-create-form.inc');
 
 } // end else post operation is not set
 
