@@ -262,7 +262,7 @@ class ldapConnection {
 		$dn = "cn=$cn,$GIDBASE";
 
 		// fetch the member we are removing as an array
-		$member = array($uid);
+		$member = array("memberUid" => array("uid=$uid"));
 
 		// modify group 
 		$result = ldap_mod_del($this->connection, $dn, $member);
@@ -279,7 +279,7 @@ class ldapConnection {
 		$dn = "cn=$cn,$GIDBASE";
 
 		// fetch user as array
-		$newMember = array($uid);
+		$newMember = array("memberUid" => array("uid=$uid"));
 
 		// modify group 
 		$result = ldap_mod_add($this->connection, $dn, $newMember);
