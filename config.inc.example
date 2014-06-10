@@ -5,6 +5,7 @@ $LDAPURL = "ldapi:///";
 $LDAPPort = "389";
 // $LDAPURL = "ldaps://some.remote.server/";
 $UIDBASE = "ou=People,$LDAPDN";
+$GIDBASE = "ou=Groups,$LDAPDN";
 
 $FULL_NAME_ATTR = 'cn';
 

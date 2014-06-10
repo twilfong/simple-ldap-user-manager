@@ -36,28 +36,13 @@ class ldapConnection {
 	// Create a user from an attribute template
 	// Display Name, Template file, Password
 	//
-	public function createUser($uid, $template, $password) {
+	public function createUser($uid, $template, $password, $attributes=array() ) {
 
 		// load configuration variables
 		include('config.inc');
 
 		// load attributes for new user from template file
 		include("templates/$template".".inc");
-
-		// It is assumed that the GID is in the template file for now
-		// add uid number to user attributes
-		$attributes['uidNumber'] = 111111;
-
-		// use UID as CN and SN and UID
-		$attributes['cn'] = $uid;
-		$attributes['sn'] = $uid;
-
-		// Formulate full path to new user
-		$dn = "uid=$uid,$UIDBASE";
-
-		// formulate home directory
-		$attributes['homeDirectory'] = '/home/' . $uid;
-
 
 		// if a password is supplied, hash it
 		if(!empty($password)){
@@ -67,19 +52,18 @@ class ldapConnection {
 			$attributes['userPassword'] = "";
 		}
 
-		// Uncomment for DEBUG
-		//echo "DN: $dn".PHP_EOL;
-		//echo "Attributes: ";
-		//print_r($attributes);
+print_r($attributes);
 
 		// Create the user with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
 
 		$error = ldap_error($this->connection);
 
+echo $error;
+
 		// TODO: Check for errors in user addition from ldap
 
-		return TRUE;
+		return $uidNumber;
 
 	}
 

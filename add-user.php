@@ -12,24 +12,33 @@ if($requireSSL === TRUE){
 
 
 
+/*
+GET/POST INPUT VARIABLES:
+operation - createUser or createGroup
+uid - username
+template - name of default attributes file
+password - plaintext password
+gid
+
+
+*/
+
+
+
+
 
 // If we are given POST data, intercept it and act
-if(isset($_POST['uid'])){
+if(isset($_REQUEST['template'])){
 
 	// Collect post variables for user creation
 	// TODO: Input validation
-	$template = $_POST['template'];
-	$password = $_POST['password'];
+	$template = $_REQUEST['template'];
+	$password = $_REQUEST['password'];
+	$uid = $_REQUEST['uid'];
+
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
-
-	// Get the next available UID
-	if(empty($_POST['uid'])){
-		$uid = $connection->getUID();
-	} else {
-		$uid = $_POST['uid'];
-	}
 
 	// Create new ldap user
 	$connection->createUser($uid, $template, $password);

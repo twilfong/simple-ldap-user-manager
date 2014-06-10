@@ -6,6 +6,7 @@
 	Template: 
 	<select name="template">
 		<option value="unixUser">Unix User</option>
+		<option value="ftpAccount">FTP Account</option>
 	</select>
 	<br />
 
