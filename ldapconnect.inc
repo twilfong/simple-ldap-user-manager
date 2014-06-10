@@ -41,9 +41,12 @@ class ldapConnection {
 		// load configuration variables
 		include('config.inc');
 
-		// load attributes for new user from template file
-		include("templates/$template".".inc");
-
+		// validate UID string
+		if(empty($uid)){
+			echo "ERROR: Must supply UID string";
+		} else {
+			$attributes['uid'] = $uid;
+		}
 
 		// if a password is supplied, hash it
 		if(!empty($password)){
@@ -56,20 +59,28 @@ class ldapConnection {
 
 		// Parse and assign user specified attributes
 		if(!empty($userAttributes)){
-			$userAttributes = explode($userAttributes,',');
+			$userAttributes = explode(',',$userAttributes);
 			foreach($userAttributes as $userAttribute){
-				$userAttribute = explode($userAttribute,'=');
+				$userAttribute = explode('=',$userAttribute);
 				$key = $userAttribute[0];
 				$value = $userAttribute[1];
 				$attributes[$key] = $value;
 			}
 		}
 
+
+		// find available uid if none supplied by user
+		if(empty($attributes['uidNumber'])){
+			$attributes['uidNumber'] = $this->getUID();
+		}
+
+		// load attributes for new user from template file
+		include("templates/$template".".inc");
+echo PHP_EOL."dn: $dn".PHP_EOL;
 print_r($attributes);
 
 		// Create the user with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
-
 		$error = ldap_error($this->connection);
 
 echo $error;

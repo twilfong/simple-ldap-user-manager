@@ -3,12 +3,6 @@
 // Formulate full path to new user
 $dn = "uid=$uid,$UIDBASE";
 
-// Assign UID Number
-if(empty($attributes['uidNumber'])){
-	echo "Autoselecting next available uidNumber.";
-	$uidNumber = $this->getUID();
-}
-
 // Determine GID Number
 if(empty($attributes['gidNumber'])){
 	echo "GID defaulting to 1000";
@@ -28,6 +22,7 @@ $attributes['objectClass'][1] = "inetOrgPerson";
 $attributes['objectClass'][2] = "posixAccount";
 $attributes['cn'] = $uid;
 $attributes['sn'] = $uid;
+
 
 
 

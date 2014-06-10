@@ -35,11 +35,12 @@ if(isset($_REQUEST['template'])){
 	$uid = $_REQUEST['uid'];
 	$template = $_REQUEST['template'];
 	$password = $_REQUEST['password'];
-	if(!empty($_REQUEST['attributes'];
+	if(!empty($_REQUEST['attributes'])) {
 		$attributes = $_REQUEST['attributes'];
 	} else {
 		$attributes = "";
 	}
+echo "attributes: $attributes";
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
@@ -48,7 +49,7 @@ if(isset($_REQUEST['template'])){
 	$connection->createUser($uid, $template, $password, $attributes);
 
 	// TODO: Move to account created html include
-	echo "Account $username created with template $template.";
+	echo PHP_EOL."Account $uid created with template $template.";
 
 
 } else { 
