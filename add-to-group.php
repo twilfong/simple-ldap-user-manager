@@ -38,7 +38,7 @@ if(isset($_REQUEST['cn'])){
 	// Create new ldap group
 	$connection->addToGroup($uid,$cn);
 
-	echo "Done! $uid added to $cn"
+	echo "Done! $uid added to $cn";
 
 } else { 
 	include('group-add-form.inc');
