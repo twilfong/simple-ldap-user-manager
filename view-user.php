@@ -14,8 +14,8 @@ if($requireSSL === TRUE){
 
 /*
 GET/POST INPUT VARIABLES:
-cn - group name
 uid - user name
+attributes - attribute=value,attribute=value...
 
 
 */
@@ -25,23 +25,19 @@ uid - user name
 
 
 // If we are given POST data, intercept it and act
-if(isset($_REQUEST['cn'])){
+if(isset($_REQUEST['uid'])){
 
 	// Collect post variables for group creation
 	// TODO: Input validation
-	$cn = $_REQUEST['cn'];
 	$uid = $_REQUEST['uid'];
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
 
-	// Create new ldap group
-	$connection->addToGroup($uid,$cn);
 
-	echo "[SUCCESS]";
 
 } else { 
-	include('group-add-form.inc');
+	include('view-user-form.inc');
 
 } // end else post operation is not set
 

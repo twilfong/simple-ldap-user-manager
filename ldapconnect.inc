@@ -287,7 +287,12 @@ class ldapConnection {
 		$member = array("memberUid" => array("uid=$uid"));
 
 		// modify group 
-		$result = ldap_mod_del($this->connection, $dn, $member);
+		ldap_mod_del($this->connection, $dn, $member);
+		$error = ldap_error($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
 	}
 
 	//
@@ -304,7 +309,51 @@ class ldapConnection {
 		$newMember = array("memberUid" => array("uid=$uid"));
 
 		// modify group 
-		$result = ldap_mod_add($this->connection, $dn, $newMember);
+		ldap_mod_add($this->connection, $dn, $newMember);
+		$error = ldap_error($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
+	}
+
+	//
+	// Fetch an LDAP user and their attributes
+	//
+	public function viewUser($uid){
+	}
+
+
+	//
+	// Modify an LDAP user
+	//
+	public function modifyEntry($uid,$userAttributes){
+
+		// ensure attributes is set
+		if(!isset($attributes)){
+			echo "[ERROR] Attributes to modify not set.";
+			exit;
+		}
+
+		// Parse and assign user specified attributes
+		if(!empty($userAttributes)){
+			$userAttributes = explode(',',$userAttributes);
+			foreach($userAttributes as $userAttribute){
+				$userAttribute = explode('=',$userAttribute);
+				$key = $userAttribute[0];
+				$value = $userAttribute[1];
+				$attributes[$key] = $value;
+			}
+		}
+
+		// get existing values
+		ldap_mod_add($this->connection, $dn, $attributes); 
+		$error = ldap_error($this->connection);
+		if(!empty($error)){
+			echo "[ERROR] LDAP server returned error: $error";
+			exit;
+		}
+
 	}
 
 }

@@ -38,7 +38,7 @@ if(isset($_REQUEST['cn'])){
 	// Create new ldap group
 	$connection->removeFromGroup($uid,$cn);
 
-	echo "Done! $uid added to $cn";
+	echo "[SUCCESS]";
 
 } else { 
 	include('group-remove-form.inc');
