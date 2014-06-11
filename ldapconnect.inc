@@ -23,14 +23,7 @@ class ldapConnection {
 		ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
 		// bind to LDAP
 		ldap_bind($this->connection,$BINDDN,$BINDPASS);
-
-		$error = ldap_error($this->connection);
-		//ldap_start_tls($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
-
+		$this->checkErrors;
 
 	}
 
@@ -78,11 +71,7 @@ class ldapConnection {
 
 		// Create the group with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 
 		return $attributes['gidNumber'];
 
@@ -137,11 +126,7 @@ class ldapConnection {
 
 		// Create the user with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 
 //echo $error;
 
@@ -161,18 +146,10 @@ class ldapConnection {
 		$attributes = array("gidNumber");
 
 		$search = ldap_search($this->connection, $GIDBASE, '(|(cn=*))', $attributes);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 
 		$results = ldap_get_entries($this->connection, $search);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 		// TODO: Handle errors
 
 		$selectedGID = $MINGID;
@@ -218,19 +195,11 @@ class ldapConnection {
 		$attributes = array("uidNumber");
 
 		$search = ldap_search($this->connection, $UIDBASE, '(|(uid=*))', $attributes);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 		// TODO: Handle errors
 
 		$results = ldap_get_entries($this->connection, $search);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 		// TODO: Handle errors
 
 		$selectedUID = $MINUID;
@@ -288,11 +257,7 @@ class ldapConnection {
 
 		// modify group 
 		ldap_mod_del($this->connection, $dn, $member);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 	}
 
 	//
@@ -310,11 +275,7 @@ class ldapConnection {
 
 		// modify group 
 		ldap_mod_add($this->connection, $dn, $newMember);
-		$error = ldap_error($this->connection);
-		if(!empty($error)){
-			echo "[ERROR] LDAP server returned error: $error";
-			exit;
-		}
+		$this->checkErrors;
 	}
 
 	//
@@ -348,12 +309,21 @@ class ldapConnection {
 
 		// get existing values
 		ldap_mod_add($this->connection, $dn, $attributes); 
+		$this->checkErrors;
+
+	}
+
+
+	//
+	// Check for LDAP errors and halt if found
+	//
+	private function checkErrors(){
 		$error = ldap_error($this->connection);
-		if(!empty($error)){
+		if(trim($error) !== trim("Success")){
 			echo "[ERROR] LDAP server returned error: $error";
+			error_log("LDAP ERROR: $error");
 			exit;
 		}
-
 	}
 
 }

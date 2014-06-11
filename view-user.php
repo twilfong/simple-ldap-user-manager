@@ -33,8 +33,9 @@ if(isset($_REQUEST['uid'])){
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
-
-
+	// TODO: LDAP search
+	// TODO: LDAP user attributes fetch
+	// TODO: Format and display attributes
 
 } else { 
 	include('view-user-form.inc');
