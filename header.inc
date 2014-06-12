@@ -1,9 +1,9 @@
 <html>
 <head>
-<title>Change LDAP Password and Details</title>
+<title>Lightweight LDAP Manager API</title>
 </head>
 <body>
 <center>
 
-<h1>Change LDAP Password and User Details</h1>
+<h1>Lightweight LDAP Manager API</h1>
 
