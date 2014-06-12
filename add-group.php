@@ -45,7 +45,9 @@ if(isset($_REQUEST['cn'])){
 
 
 } else { 
+	include('header.inc');
 	include('group-create-form.inc');
+	include('footer.inc');
 
 } // end else post operation is not set
 

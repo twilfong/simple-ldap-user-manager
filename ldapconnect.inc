@@ -279,9 +279,9 @@ class ldapConnection {
 	}
 
 	//
-	// Fetch an LDAP user and their attributes
+	// Fetch an LDAP entry and view its attributes
 	//
-	public function viewUser($uid){
+	public function viewEntry($uid){
 	}
 
 

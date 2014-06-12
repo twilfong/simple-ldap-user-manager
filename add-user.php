@@ -51,7 +51,9 @@ if(isset($_REQUEST['template'])){
 
 } else { 
 	// if no template option is specified, show input form
+	include('header.inc');
 	include('input-form.inc');
+	include('footer.inc');
 
 } // end else post operation is not set
 

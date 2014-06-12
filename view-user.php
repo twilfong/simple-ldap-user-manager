@@ -33,12 +33,17 @@ if(isset($_REQUEST['uid'])){
 
 	// Start LDAP connection
 	$connection = new ldapConnection();
+
+	$entry = $connection->viewEntry($uid);
 	// TODO: LDAP search
 	// TODO: LDAP user attributes fetch
+	print_r($entry);
 	// TODO: Format and display attributes
 
 } else { 
+	include('header.inc');
 	include('view-user-form.inc');
+	include('footer.inc');
 
 } // end else post operation is not set
 

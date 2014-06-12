@@ -43,7 +43,9 @@ if(isset($_REQUEST['uid'])){
 
 
 } else { 
+	include('header.inc');
 	include('modify-user-form.inc');
+	include('footer.inc');
 
 } // end else post operation is not set
 
