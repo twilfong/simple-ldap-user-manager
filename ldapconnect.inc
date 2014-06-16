@@ -23,7 +23,7 @@ class ldapConnection {
 		ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
 		// bind to LDAP
 		ldap_bind($this->connection,$BINDDN,$BINDPASS);
-		$this->checkErrors;
+		$this->checkErrors();
 
 	}
 
@@ -71,7 +71,7 @@ class ldapConnection {
 
 		// Create the group with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
-		$this->checkErrors;
+		$this->checkErrors();
 
 		return $attributes['gidNumber'];
 
@@ -126,7 +126,7 @@ class ldapConnection {
 
 		// Create the user with supplied attributes
 		ldap_add($this->connection,$dn,$attributes);
-		$this->checkErrors;
+		$this->checkErrors();
 
 //echo $error;
 
@@ -146,10 +146,10 @@ class ldapConnection {
 		$attributes = array("gidNumber");
 
 		$search = ldap_search($this->connection, $GIDBASE, '(|(cn=*))', $attributes);
-		$this->checkErrors;
+		$this->checkErrors();
 
 		$results = ldap_get_entries($this->connection, $search);
-		$this->checkErrors;
+		$this->checkErrors();
 		// TODO: Handle errors
 
 		$selectedGID = $MINGID;
@@ -195,11 +195,11 @@ class ldapConnection {
 		$attributes = array("uidNumber");
 
 		$search = ldap_search($this->connection, $UIDBASE, '(|(uid=*))', $attributes);
-		$this->checkErrors;
+		$this->checkErrors();
 		// TODO: Handle errors
 
 		$results = ldap_get_entries($this->connection, $search);
-		$this->checkErrors;
+		$this->checkErrors();
 		// TODO: Handle errors
 
 		$selectedUID = $MINUID;
@@ -257,7 +257,7 @@ class ldapConnection {
 
 		// modify group 
 		ldap_mod_del($this->connection, $dn, $member);
-		$this->checkErrors;
+		$this->checkErrors();
 	}
 
 	//
@@ -275,7 +275,7 @@ class ldapConnection {
 
 		// modify group 
 		ldap_mod_add($this->connection, $dn, $newMember);
-		$this->checkErrors;
+		$this->checkErrors();
 	}
 
 	//
@@ -302,25 +302,23 @@ class ldapConnection {
 	public function modifyEntry($uid,$userAttributes){
 
 		// ensure attributes is set
-		if(!isset($attributes)){
+		if(empty($userAttributes)){
 			echo "[ERROR] Attributes to modify not set.";
 			exit;
 		}
 
 		// Parse and assign user specified attributes
-		if(!empty($userAttributes)){
-			$userAttributes = explode(',',$userAttributes);
-			foreach($userAttributes as $userAttribute){
-				$userAttribute = explode('=',$userAttribute);
-				$key = $userAttribute[0];
-				$value = $userAttribute[1];
-				$attributes[$key] = $value;
-			}
+		$userAttributes = explode(',',$userAttributes);
+		foreach($userAttributes as $userAttribute){
+			$userAttribute = explode('=',$userAttribute);
+			$key = $userAttribute[0];
+			$value = $userAttribute[1];
+			$attributes[$key] = $value;
 		}
 
 		// get existing values
 		ldap_mod_add($this->connection, $dn, $attributes); 
-		$this->checkErrors;
+		$this->checkErrors();
 
 	}
 
