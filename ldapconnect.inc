@@ -282,6 +282,17 @@ class ldapConnection {
 	// Fetch an LDAP entry and view its attributes
 	//
 	public function viewEntry($uid){
+
+		include('config.inc');
+
+		// Formulate user Dn
+		$userDn = "uid=$uid,$UIDBASE";
+
+		// fetch all ldap attributes for this user
+		$ldapEntries = ldap_read($this->connection, $userDn, '(objectclass=*)');
+    		$attributes = ldap_get_entries( $this->connection, $ldapEntries );
+
+		return $attributes;
 	}
 
 

@@ -34,11 +34,30 @@ if(isset($_REQUEST['uid'])){
 	// Start LDAP connection
 	$connection = new ldapConnection();
 
-	$entry = $connection->viewEntry($uid);
-	// TODO: LDAP search
-	// TODO: LDAP user attributes fetch
-	print_r($entry);
-	// TODO: Format and display attributes
+	$attributes = $connection->viewEntry($uid);
+
+	$output = "";
+
+	// Display in csv format
+	foreach($attributes[0] as $key => $attribute){
+
+		// the ldap read function returns a hash map and array mixed
+		// this handles array items differently than hash maps
+		if(!is_numeric($key)){
+
+			if(is_array($attribute)){
+				$output .= $key.":".$attribute[0].",";
+			} else {
+				$output .= $key.":".$attribute.",";
+			}
+
+		}
+		
+	}
+	$output = trim($output,', ');
+	echo $output;
+
+	//print_r($attributes);
 
 } else { 
 	include('header.inc');
