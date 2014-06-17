@@ -315,7 +315,7 @@ class ldapConnection {
 		}
 
 		// get attributes for this user before modification
-		$attributes = $this->viewEntry($userDn);
+		$attributes = $this->viewEntry($uid);
 		$attributes = $attributes[0];
 
 		// filter out numeric values id ldap_view command
@@ -329,6 +329,30 @@ class ldapConnection {
 		}
 		$attributes = $filteredAttributes;
 
+		// unset count field from ldap_view results
+		foreach($attributes as $key => $attribute){
+			if(is_numeric($attributes[$key]['count'])){
+				unset($attributes[$key]['count']);
+			}
+		}
+		if(isset($attributes['count'])){
+			unset($attributes['count']);
+		}
+
+		// fix any un-neecssary arrays (convert to flat hash map)
+		foreach($attributes as $key => $attribute){
+			if(is_array($attributes[$key])){
+				if(count($attributes[$key]) <= 1){
+					$attributes[$key] = $attributes[$key][0];
+				}
+			}
+		}
+
+		// remove dn as added by ldap_view
+		if(isset($attributes['dn'])){
+			unset($attributes['dn']);
+		}
+
 
 		// Parse and enforce user specified attributes on top of fetched ones
 		// Input format: key:value,key:value...
@@ -336,13 +360,16 @@ class ldapConnection {
 		foreach($userAttributes as $userAttribute){
 			$userAttribute = explode(':',$userAttribute);
 			$key = $userAttribute[0];
+			$key = strtolower($key);
 			$value = $userAttribute[1];
 			$attributes[$key] = $value;
 		}
+
+		echo "Setting $userDn attributes to:";
 		print_r($attributes);
 
 		// get existing values
-		ldap_modify($this->connection, $dn, $attributes); 
+		ldap_modify($this->connection, $userDn, $attributes); 
 		$this->checkErrors();
 
 	}
