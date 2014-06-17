@@ -365,8 +365,8 @@ class ldapConnection {
 			$attributes[$key] = $value;
 		}
 
-		echo "Setting $userDn attributes to:";
-		print_r($attributes);
+		//echo "Setting $userDn attributes to:";
+		//print_r($attributes);
 
 		// get existing values
 		ldap_modify($this->connection, $userDn, $attributes); 
