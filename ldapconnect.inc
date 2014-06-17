@@ -290,7 +290,9 @@ class ldapConnection {
 
 		// fetch all ldap attributes for this user
 		$ldapEntries = ldap_read($this->connection, $userDn, '(objectclass=*)');
+		$this->checkErrors();
     		$attributes = ldap_get_entries( $this->connection, $ldapEntries );
+		$this->checkErrors();
 
 		return $attributes;
 	}
@@ -301,23 +303,46 @@ class ldapConnection {
 	//
 	public function modifyEntry($uid,$userAttributes){
 
+		include('config.inc');
+
+		// formulate full path to this dn
+		$userDn = "uid=$uid,$UIDBASE";
+
 		// ensure attributes is set
 		if(empty($userAttributes)){
 			echo "[ERROR] Attributes to modify not set.";
 			exit;
 		}
 
-		// Parse and assign user specified attributes
+		// get attributes for this user before modification
+		$attributes = $this->viewEntry($userDn);
+		$attributes = $attributes[0];
+
+		// filter out numeric values id ldap_view command
+		$filteredAttributes = array();
+		foreach($attributes as $key => $attribute){
+			if(is_numeric($key)){
+				continue;
+			} else {
+				$filteredAttributes[$key] = $attribute;
+			}
+		}
+		$attributes = $filteredAttributes;
+
+
+		// Parse and enforce user specified attributes on top of fetched ones
+		// Input format: key:value,key:value...
 		$userAttributes = explode(',',$userAttributes);
 		foreach($userAttributes as $userAttribute){
-			$userAttribute = explode('=',$userAttribute);
+			$userAttribute = explode(':',$userAttribute);
 			$key = $userAttribute[0];
 			$value = $userAttribute[1];
 			$attributes[$key] = $value;
 		}
+		print_r($attributes);
 
 		// get existing values
-		ldap_mod_add($this->connection, $dn, $attributes); 
+		ldap_modify($this->connection, $dn, $attributes); 
 		$this->checkErrors();
 
 	}
