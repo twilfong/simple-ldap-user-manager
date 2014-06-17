@@ -1,18 +1,18 @@
-*DESCRIPTION
+## DESCRIPTION
 This application provides a generic but flexible LDAP API that can be used
 easily with anything that can make a GET or POST request. This application
 makes it trivial to write automation against LDAP.
 
 
-*SETUP
+## SETUP
 Copy config.inc.example to config.inc and configure for your environment.
 
 
-*USAGE
+## USAGE
 
 Endpoints for adding users, adding groups, removing users, modifying users, viewing users...  
 
-# Creating Users
+### Creating Users
 * **URL:** http://localhost/add-user.php
 * **Returns:** uidNumber of created account (plaintext)
 * **GET/POST Parameters:** uid,password,template,attributes
@@ -32,7 +32,7 @@ Endpoints for adding users, adding groups, removing users, modifying users, view
 
 **EXAMPLE:** `wget "http://localhost/simple-ldap-user-manager/add-user.php?uid=test&password=1234&template=unixUser&attributes=homeDirectory=/home/testuser,gidNumber=7000" -q -O -`
 
-# Creating Groups
+### Creating Groups
 * **URL:** http://localhost/add-group.php
 * **Returns:** gidNumber of created account (plaintext)
 * **GET/POST Parameters:** cn,attributes
@@ -43,7 +43,8 @@ Endpoints for adding users, adding groups, removing users, modifying users, view
 
 **EXAMPLE:** wget "http://localhost/simple-ldap-user-manager/add-group.php?cn=test&attributes=gidNumber=5000" -q -O -
 
-# Adding User to Group #
+
+### Adding User to Group #
 * **URL:** http://localhost/add-to-group.php
 * **Returns:** nothing
 * **GET/POST Parameters:** cn,uid
@@ -52,7 +53,7 @@ Endpoints for adding users, adding groups, removing users, modifying users, view
     * **uid:** User Name (string plaintext) (Required)
 
 
-# Removing User from Group
+### Removing User from Group
 * **URL:** http://localhost/remove-from-group.php
 * **Returns:** nothing
 * **GET/POST Parameters:**  cn,uid
@@ -60,14 +61,15 @@ Endpoints for adding users, adding groups, removing users, modifying users, view
     * **cn:** Group Name (string plaintext) (Required)
     * **uid:** User Name (string plaintext) (Required)
 
-# View user attributes
+
+### View user attributes
 * **URL:** http://localhost/view-user.php
 * **Returns:** php print_r of user's attributes
 * **GET/POST Parameters:**  uid
 
     * **uid:** User Name (string plaintext) (Required)
 
-# Edit user attributes
+### Edit user attributes
 * **URL:** http://localhost/modify-user.php
 * **Returns:** nothing
 * **GET/POST Parameters:**  uid, attributes
