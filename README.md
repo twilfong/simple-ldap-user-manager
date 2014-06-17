@@ -41,7 +41,7 @@ Endpoints for adding users, adding groups, removing users, modifying users, view
     * **attributes:** LDAPAttribute=Value,LDAPAttribute=Value... (string plaintext) (Optional)
         * gidNumber (defaults to 1000)
 
-**EXAMPLE:** wget "http://localhost/simple-ldap-user-manager/add-group.php?cn=test&attributes=gidNumber=5000" -q -O -
+**EXAMPLE:** `wget "http://localhost/simple-ldap-user-manager/add-group.php?cn=test&attributes=gidNumber=5000" -q -O -`
 
 
 ### Adding User to Group #
