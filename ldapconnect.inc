@@ -355,10 +355,10 @@ class ldapConnection {
 
 
 		// Parse and enforce user specified attributes on top of fetched ones
-		// Input format: key:value,key:value...
+		// Input format: key=value,key=value...
 		$userAttributes = explode(',',$userAttributes);
 		foreach($userAttributes as $userAttribute){
-			$userAttribute = explode(':',$userAttribute);
+			$userAttribute = explode('=',$userAttribute);
 			$key = $userAttribute[0];
 			$key = strtolower($key);
 			$value = $userAttribute[1];
