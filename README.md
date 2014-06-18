@@ -16,7 +16,7 @@ You need the php-ldap package. `yum install php-ldap -y`
 
 There are different endpoints for adding users, groups, removing users, modifying users, viewing users and adding users to groups...  Just form a URL and call it with wget or curl.
 
-Example: `wget -O - -q "http://localhost/add-to-group.php/?uid=testuser&cn=testgroup"
+Example: `wget -O - -q "http://localhost/add-to-group.php/?uid=testuser&cn=testgroup"`
 
 
 ### Creating Users
