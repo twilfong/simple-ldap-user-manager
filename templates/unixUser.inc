@@ -22,6 +22,8 @@ $attributes['objectClass'][1] = "inetOrgPerson";
 $attributes['objectClass'][2] = "posixAccount";
 $attributes['cn'] = $uid;
 $attributes['sn'] = $uid;
+$attributes['gecos'] = $uid;
+$attributes['mail'] = $uid."@".$myDomain;
 
 
 

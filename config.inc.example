@@ -40,3 +40,6 @@ $MAXUID=6000;
 $MINGID=5000;
 // Highest possible gidNumber to be used
 $MAXGID=6000;
+
+// What domain do we want to assume as the email address of newly created users?
+$myDomain=""
