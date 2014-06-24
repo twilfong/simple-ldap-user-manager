@@ -64,8 +64,7 @@ class ldapConnection {
 		// apply other attributes required by groups
 		$attributes['objectclass'][0] = "posixGroup";
 		$attributes['objectclass'][1] = "top";
-		$attributes['cn'][0] = "ldapusers";
-		$attributes['memberUid'][0] = "";
+		$attributes['memberUid'] = "";
 
 		$dn = "cn=$cn,$GIDBASE";
 
