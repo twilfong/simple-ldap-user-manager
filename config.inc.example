@@ -1,0 +1,45 @@
+<?php
+
+$LDAPDN = "dc=example,dc=com";
+$LDAPURL = "ldapi:///";
+$LDAPPort = "389";
+// $LDAPURL = "ldaps://some.remote.server/";
+$UIDBASE = "ou=People,$LDAPDN";
+$GIDBASE = "ou=Groups,$LDAPDN";
+
+$FULL_NAME_ATTR = 'cn';
+
+// array of LDAP attributes to allow a non-admin user to modify
+// elements should be 'attribute' => 'description'
+$LDAP_ATTRS = array(
+    'mobile' => 'Mobile Numer',
+    'homephone' => 'Home or Alternate Phone'
+);
+
+$LDAPPASSWD_CMD = "/usr/local/bin/ldappasswd-wrapper $LDAPURL";
+
+$MSG_BG_COLORS = array(
+    '#99d0ff',	# Bg color for information/success
+    '#ffd0d0'	# Bg color for error/warning
+);
+
+// Do we want to enforce SSL traffic only?
+$requireSSL = TRUE;
+
+// Location of bind user that we will login as
+$BINDDN = 'cn=ldapuser,dc=your,dc=domain,dc=com';
+// Password of bind user
+$BINDPASS = "bindp@ss!";
+
+// Lowest possible uidNumber to be used
+$MINUID=5000;
+// Highest possible uidNumber to be used
+$MAXUID=6000;
+
+// Lowest possible gidNumber to be used
+$MINGID=5000;
+// Highest possible gidNumber to be used
+$MAXGID=6000;
+
+// What domain do we want to assume as the email address of newly created users?
+$myDomain=""

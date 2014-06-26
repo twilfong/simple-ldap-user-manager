@@ -1,9 +1,9 @@
 <html>
 <head>
-<title>Change LDAP Password and Details</title>
+<title>LLAMA</title>
 </head>
 <body>
 <center>
 
-<h1>Change LDAP Password and User Details</h1>
+<h1>Lightweight LDAP Account Management API</h1>
 
