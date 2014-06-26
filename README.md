@@ -1,3 +1,6 @@
+![Lightweight LDAP Account Management API](https://raw.githubusercontent.com/integrii/LLAMA/master/img/llamas.gif)
+
+
 ## DESCRIPTION
 This application provides a generic but flexible LDAP API that can be used
 easily with anything that can make a GET or POST request. This application
