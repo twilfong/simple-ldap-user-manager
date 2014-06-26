@@ -1,9 +1,9 @@
 <html>
 <head>
-<title>Lightweight LDAP Manager API</title>
+<title>LLAMA</title>
 </head>
 <body>
 <center>
 
-<h1>Lightweight LDAP Manager API</h1>
+<h1>Lightweight LDAP Account Management API</h1>
 
