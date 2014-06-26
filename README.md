@@ -40,7 +40,7 @@ Example: `wget -O - -q "http://localhost/add-to-group.php/?uid=testuser&cn=testg
     * gidNumber (optional - defaults to 1000)
     * uidNumber (optional - determines next automatically if not set)
 
-**EXAMPLE:** `wget "http://localhost/simple-ldap-user-manager/add-user.php?uid=test&password=1234&template=unixUser&attributes=homeDirectory=/home/testuser,gidNumber=7000" -q -O -`
+**EXAMPLE:** `wget "http://localhost/add-user.php?uid=test&password=1234&template=unixUser&attributes=homeDirectory=/home/testuser,gidNumber=7000" -q -O -`
 
 ### Creating Groups
 * **URL:** http://localhost/add-group.php
@@ -51,7 +51,7 @@ Example: `wget -O - -q "http://localhost/add-to-group.php/?uid=testuser&cn=testg
     * **attributes:** LDAPAttribute=Value,LDAPAttribute=Value... (string plaintext) (Optional)
         * gidNumber (defaults to 1000)
 
-**EXAMPLE:** `wget "http://localhost/simple-ldap-user-manager/add-group.php?cn=test&attributes=gidNumber=5000" -q -O -`
+**EXAMPLE:** `wget "http://localhost/add-group.php?cn=test&attributes=gidNumber=5000" -q -O -`
 
 
 ### Adding User to Group #
@@ -87,4 +87,4 @@ Example: `wget -O - -q "http://localhost/add-to-group.php/?uid=testuser&cn=testg
     * **uid:** User Name (string plaintext) (Required)
     * **attributes:** LDAPAttribute=Value,LDAPAttribute=Value... (string plaintext) (Optional)
 
-**EXAMPLE:** `wget "http://localhost/simple-ldap-user-manager/modify-user.php?uid=test&attributes=homeDirectory=/home/testuser,gidNumber=7000" -q -O -`
+**EXAMPLE:** `wget "http://localhost/modify-user.php?uid=test&attributes=homeDirectory=/home/testuser,gidNumber=7000" -q -O -`
